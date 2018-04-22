@@ -20,13 +20,21 @@ import antlr.collections.List;
 import cl.citiaps.spring.backend.entities.Actor;
 import cl.citiaps.spring.backend.entities.Film;
 import cl.citiaps.spring.backend.entities.FilmActor;
+import cl.citiaps.spring.backend.entities.FilmActorPK;
 import cl.citiaps.spring.backend.repository.ActorRepository;
+import cl.citiaps.spring.backend.repository.FilmActorRepository;
 import cl.citiaps.spring.backend.repository.FilmRepository;
 
 @CrossOrigin
 @RestController  
 @RequestMapping("/films")
 public class FilmService {
+	
+	@Autowired
+	private ActorRepository actorRepository;
+	
+	@Autowired
+	private FilmActorRepository filmActorRepository;
 	
 	@Autowired
 	private FilmRepository filmRepository;
@@ -61,6 +69,46 @@ public class FilmService {
         return actors;
 		
 	}
+	
+	
+	@RequestMapping(value = "/{film_id}/actors/{actor_id}", method = RequestMethod.POST) 
+	@ResponseBody 
+	public ResponseEntity<FilmActor> vincula(@PathVariable("film_id") Integer film_id, @PathVariable("actor_id") Integer actor_id){ 
+		
+		
+		if(filmRepository.exists(film_id)) {
+			if(actorRepository.exists(actor_id)) {
+				
+				Film film = filmRepository.findOne(film_id); 
+				Actor actor = actorRepository.findOne(actor_id);
+				
+				//no entra por resource, lo creo aca
+				FilmActor filmActor = new FilmActor();
+			    
+				//seteo los actores y los "cositos"
+				filmActor.setFilm(film); 
+			    filmActor.setActor(actor); 
+			    
+			    //creo la llave de dicha tabla (a nivel logico)
+			    FilmActorPK filmActorPK = new FilmActorPK();
+			    filmActorPK.setFilm_id(film_id);
+			    filmActorPK.setActor_id(actor_id);
+			    
+			    //enlazo la llave a filmActor
+			    filmActor.setId(filmActorPK);
+			    
+			    //retorno y guardo                                GUARDO!!!                       
+			    return new ResponseEntity<FilmActor>(filmActorRepository.save(filmActor), HttpStatus.CREATED);
+			}
+				//SI ES QUE NO EXISTE ALGUNO     RETORNO ERROR
+			return new ResponseEntity<FilmActor>(HttpStatus.BAD_REQUEST);
+		}
+		 //SI ES QUE NO EXISTE ALGUNO RETORNO ERROR
+		return new ResponseEntity<FilmActor>(HttpStatus.BAD_REQUEST);
+		
+
+	 } 
+	
 
 	/*
 	@RequestMapping(method = RequestMethod.POST)
@@ -73,7 +121,7 @@ public class FilmService {
 			return new ResponseEntity<Actor>(actorRepository.save(resource), HttpStatus.CREATED);
 		}
 	}
-
+	/*
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
 	@ResponseBody
 	public Actor update(@PathVariable("id") Integer id, @RequestBody Actor resource) {
@@ -87,4 +135,7 @@ public class FilmService {
 	} 
 
 	*/
+	
+	
+	
 }
