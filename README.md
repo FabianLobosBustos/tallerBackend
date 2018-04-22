@@ -1,4 +1,14 @@
-# README #
+# ENTREGA N°2 SPRING - Taller de Base de Datos #
+--------------------------------------
 
-HAGAN UN LINDO README CHIQUILLOS LOS QUIERO
+--------------------------------------
+Integrantes:
 
+LOBOS BUSTOS FABIAN ANDRES
+CIFUENTES ZURITA JAVIER ALEJANDRO
+VÁSQUEZ FIGUEROA JORGE MANUEL
+SARMIENTO MERANI BÁRBARA FRANCISCA
+PIZARRO RIFFO ALBERTO ANDRÉS
+
+---------------------------------------
+#Instrucciones de uso#
